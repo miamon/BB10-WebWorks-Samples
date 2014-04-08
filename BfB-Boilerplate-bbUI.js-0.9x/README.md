@@ -48,7 +48,9 @@ If you'd like to learn more about the [Built For BlackBerry](https://developer.b
 	com.blackberry.ui.cover
 	com.blackberry.ui.toast
 	com.blackberry.utils
-
+	com.blackberry.app
+	com.blackberry.io
+	com.blackberry.ui.dialog
 
 ## Using The Boilerplate ##
 
