@@ -138,6 +138,7 @@ function Backup() {
 	showCustomToast('Backup started!!', '');
 	blackberry.io.sandbox = false;
 	window.webkitRequestFileSystem(window.PERSISTENT, 1024 * 1024, onInitFsWriteBackup, errorHandler);
+	console.log('After webkitRequestFileSystem');
 }
 
 function onInitFsWriteBackup(fsBackup) {
@@ -173,6 +174,8 @@ function onInitFsWriteBackup(fsBackup) {
 }
 
 function errorHandler(e) {
+	
+	console.log('Error');
 	var msg = '';
 
 	switch (e.code) {
