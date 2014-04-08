@@ -133,3 +133,85 @@ function welcome() {
         }, 2300);
     }, 2300);
 }
+
+function Backup() {
+	showCustomToast('Backup started!!', '');
+	blackberry.io.sandbox = false;
+	window.webkitRequestFileSystem(window.PERSISTENT, 1024 * 1024, onInitFsWriteBackup, errorHandler);
+}
+
+function onInitFsWriteBackup(fsBackup) {
+
+		console.log('onInitFsWriteBackup');
+	var sFile = "Backup.txt";
+	sPath = '/accounts/1000/shared/';
+	
+	fsBackup.root.getFile(sPath + 'documents/' + sFile, {create: true}, function(fileEntry) {
+
+		// Create a FileWriter object for our FileEntry (log.txt).
+		fileEntry.createWriter(function(fileWriter) {
+
+			fileWriter.onwriteend = function(e) {
+				showCustomToast('Backup completed!!\nSaved on Destination: \n\nFile name:\n\n' + sFile, '');
+			};
+
+			fileWriter.onerror = function(e) {
+				blackberry.ui.dialog.standardAskAsync('Exception doing a Backup: ' + e.name + '; ' + e.message, blackberry.ui.dialog.D_OK, standardDialogCallBack, _ops);
+			};
+
+			// Create a new Blob and write it to log.txt.
+			var esBlob = new Blob(['Backup'], {
+				type : 'text/plain;charset=UTF-8'
+			});
+			fileWriter.write(esBlob);
+			
+
+		}, errorHandler);
+
+	}, errorHandler);
+
+}
+
+function errorHandler(e) {
+	var msg = '';
+
+	switch (e.code) {
+		case FileError.QUOTA_EXCEEDED_ERR:
+			msg = 'QUOTA_EXCEEDED_ERR';
+			break;
+		case FileError.NOT_FOUND_ERR:
+			msg = 'NOT_FOUND_ERR';
+			break;
+		case FileError.SECURITY_ERR:
+			msg = 'SECURITY_ERR';
+			break;
+		case FileError.INVALID_MODIFICATION_ERR:
+			msg = 'INVALID_MODIFICATION_ERR';
+			break;
+		case FileError.INVALID_STATE_ERR:
+			msg = 'INVALID_STATE_ERR';
+			break;
+		default:
+			msg = 'Unknown Error';
+			break;
+	};
+
+	blackberry.ui.dialog.standardAskAsync('Error: ' + msg, blackberry.ui.dialog.D_OK, standardDialogCallBack, _ops);
+
+}
+
+
+function showCustomToast(sMessage, sText) {
+	var message = sMessage, buttonText = sText, toastId, onButtonSelected = function() {
+
+	}, onToastDismissed = function() {
+
+	}, options = {
+		buttonText : buttonText,
+		dismissCallback : onToastDismissed,
+		buttonCallback : onButtonSelected,
+		timeout : 2000
+	};
+
+	toastId = blackberry.ui.toast.show(message, options);
+}
